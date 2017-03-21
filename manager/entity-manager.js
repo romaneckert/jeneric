@@ -11,7 +11,7 @@ class EntityManager {
 
     persist(object) {
 
-        let tableName = object.constructor.name.toLowerCase() + 's';
+        let tableName = object._getTableName();
         let cleanedObject = {};
 
         for(let key in object) {
@@ -26,7 +26,7 @@ class EntityManager {
 
             if(!this._data.hasOwnProperty(tableName)) this._data[tableName] = {};
 
-            if('number' != typeof object.id) object.id = this._getNewIncrement(tableName);
+            if('number' != typeof object.id) object.id = this._getNewIncrementByObject(tableName);
 
             this._data[tableName][object.id] = cleanedObject;
 
@@ -47,17 +47,18 @@ class EntityManager {
 
     }
 
-    _getNewIncrement(tableName) {
+    _getNewIncrementByObject(object) {
 
         let increment = 0;
 
-        for(let id in this._data[tableName]) {
+        for(let id in this._data[object._getTableName()]) {
 
             if(parseInt(id) > increment) increment = parseInt(id);
         }
 
         return increment + 1;
     }
+
 }
 
 module.exports = new EntityManager();

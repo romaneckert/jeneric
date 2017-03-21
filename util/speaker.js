@@ -1,4 +1,3 @@
-const config = require('./config').speaker;
 const http = require('http');
 const logger = require('./logger');
 const spawn = require('child_process').spawn;

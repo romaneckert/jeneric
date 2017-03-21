@@ -10,6 +10,10 @@ class Entity {
     set id(id) {
         this._id = id;
     }
+
+    _getTableName() {
+        return this.constructor.name.toLowerCase() + 's';
+    }
 }
 
 module.exports = Entity;

@@ -7,5 +7,8 @@ module.exports = {
     },
     Controller : {
         Controller : require('./controller/controller')
+    },
+    Util : {
+        Speaker : require('./util/speaker')
     }
 };
