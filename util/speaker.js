@@ -11,6 +11,7 @@ class Speaker {
 
     constructor() {
         this._directory = 'var/sounds';
+        this._marytts
         this._ready = false;
         this._working = false;
         this._queue = [];

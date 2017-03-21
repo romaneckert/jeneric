@@ -2,8 +2,10 @@ module.exports = {
     Entity : {
         Entity : require('./entity/entity')
     },
-    Manager : {
-        EntityManager: require('./manager/entity-manager')
+    Core : {
+        EntityManager: require('./core/entity-manager'),
+        Config: require('./core/config'),
+        Jeneric: require('./core/jeneric')
     },
     Controller : {
         Controller : require('./controller/controller')
