@@ -1,14 +1,24 @@
 const fs = require('node-fs');
 const strftime = require('strftime');
+const config = require('jeneric/core/config');
 
 class Logger {
 
     constructor() {
-        this._directory = 'var/logs';
-    }
+        this._config = {
+            directory: 'var/logs/'
+        };
 
-    set directory(directory) {
-        this._directory = directory;
+        if(config.logger) this._config = config.logger;
+
+        if(!fs.existsSync(config.path.root + this._config.directory)) {
+            fs.mkdirSync(config.path.root + this._config.directory);
+        }
+
+        if(!fs.existsSync(config.path.root + this._config.directory + 'log.log')) {
+            fs.writeFileSync(config.path.root + this._config.directory + 'log.log');
+        }
+
     }
 
     debug(data, meta) {
@@ -16,7 +26,7 @@ class Logger {
     }
 
     info(data, meta) {
-        this._log(data, meta, 'info ');
+        this._log(data, meta, 'info');
     }
 
     error(data, meta) {
@@ -48,12 +58,12 @@ class Logger {
 
                 if('error' == type) {
                     fs.appendFileSync(
-                        this._directory + '/log.log',
+                        this._config.directory + 'log.log',
                         message
                     )
                 } else {
                     fs.appendFile(
-                        this._directory + '/log.log',
+                        this._config.directory + 'log.log',
                         message,
                         (error) => { if (error) throw error; }
                     );

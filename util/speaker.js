@@ -10,15 +10,23 @@ const player = require('play-sound')(opts = {})
 class Speaker {
 
     constructor() {
-        this._directory = 'var/sounds';
-        this._marytts
+
+        this._config = {
+            directory: 'var/sounds/',
+            marytts : {
+                host: '127.0.0.1',
+                port: 59125,
+                bin: 'vendor/marytts-5.2/bin/marytts-server'
+            }
+        };
+
         this._ready = false;
         this._working = false;
         this._queue = [];
 
-        if (!fs.existsSync(this._directory)) fs.mkdirSync(config.directory);
+        if (!fs.existsSync(this._config.directory)) fs.mkdirSync(this._config.directory);
 
-        http.get('http://' + config.marytts.host + ':' + config.marytts.port + '/version', (response) => {
+        http.get('http://' + this._config.marytts.host + ':' + this._config.marytts.port + '/version', (response) => {
 
             if(response && 200 == response.statusCode) {
                 this._ready = true;
@@ -48,7 +56,7 @@ class Speaker {
 
         logger.info('Start MaryTTS Server');
 
-        const child = spawn('./' + config.marytts.path, {
+        const child = spawn('./' + this._config.marytts.bin, {
             detached: true
         });
 
@@ -90,8 +98,8 @@ class Speaker {
         };
 
         let queryString = querystring.stringify(params);
-        let url = 'http://' + config.marytts.host + ':' + config.marytts.port + '/process?' + queryString;
-        let filePath = config.directory + '/' + slug(message, {lower: true}) + '.wav';
+        let url = 'http://' + this._config.marytts.host + ':' + this._config.marytts.port + '/process?' + queryString;
+        let filePath = this._config.directory + '/' + slug(message, {lower: true}) + '.wav';
         let errorMessage = 'can not get message from marytts server for url: ' + url;
 
         http.get(url, (response) => {

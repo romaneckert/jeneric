@@ -24,8 +24,6 @@ class Config {
             }
         }
 
-        console.log(this);
-
     }
 }
 
