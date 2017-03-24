@@ -1,4 +1,4 @@
-const fs = require('node-fs');
+const fs = require('fs-extra');
 const strftime = require('strftime');
 const config = require('jeneric/core/config');
 

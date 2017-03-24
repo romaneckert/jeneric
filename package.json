@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/romaneckert/jeneric/issues"
   },
-  "homepage": "https://github.com/romaneckert/jeneric#readme"
+  "homepage": "https://github.com/romaneckert/jeneric#readme",
+  "dependencies": {
+    "fs-extra": "^2.1.2"
+  }
 }
