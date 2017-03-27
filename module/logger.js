@@ -41,8 +41,11 @@ class Logger {
             case 'string':
                 data = data.split("\n");
                 break;
+            case 'object':
+                data = String(data);
+                break;
             default:
-                throw new Error('logger not defined for type: ' + typeof data + ' message: ' + String(data));
+                throw new Error('logger not defined for type "' + typeof data + '" and message "' + String(data) + '"');
                 break;
         }
 

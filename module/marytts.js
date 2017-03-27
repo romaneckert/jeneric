@@ -17,8 +17,6 @@ class MaryTTS {
             bin: 'vendor/marytts-5.2/bin/marytts-server'
         });
 
-        console.log(this._config);
-
         fs.ensureDirSync(this._config.directory);
 
         this._running = false;
@@ -36,7 +34,7 @@ class MaryTTS {
     _startServer() {
         logger.info('Start MaryTTS Server');
 
-        let child = spawn('./' + this.marytts.bin, {
+        let child = spawn('./' + this._config.bin, {
             detached: true
         });
 
@@ -91,7 +89,7 @@ class MaryTTS {
                 throw errorMessage;
             }
 
-        }).on('error', (e) => {
+        }).on('error', (errorMessage) => {
             logger.error(errorMessage);
             throw errorMessage;
         });
