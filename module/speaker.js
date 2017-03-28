@@ -1,6 +1,4 @@
-const fs = require('fs-extra');
 const player = require('play-sound')(opts = {});
-const config = require('jeneric/core/config');
 const marytts = require('jeneric/module/marytts');
 const logger = require('jeneric/module/logger');
 
