@@ -29,47 +29,54 @@ class Server {
 
         this._server.listen(3000);
 
+        logger.debug('start http server');
+
     }
 
     _handleRequest(request, response) {
 
         logger.debug(request.method + ': ' + request.url);
 
-        const parsedUrl = url.parse(request.url);
-
+        let parsedUrl = url.parse(request.url);
         let pathname = './' + this._config.path + parsedUrl.pathname;
 
-        fs.exists(pathname, (exist) => {
-            if(!exist) {
+        if(!fs.existsSync(pathname)) {
+            logger.error('Not found: ' + pathname);
+            response.statusCode = 404;
+            response.end('Not found.');
+            return false;
+        }
+
+        if(fs.statSync(pathname).isDirectory()) pathname += '/index.html';
+
+        if(!fs.existsSync(pathname)) {
+            logger.error('Not found: ' + pathname);
+            response.statusCode = 404;
+            response.end('Not found.');
+            return false;
+        }
+
+        fs.readFile(pathname, (error, data) => {
+            if (error) {
                 logger.error('Not found: ' + pathname);
                 response.statusCode = 404;
                 response.end('Not found.');
-                return true;
-            }
+                return false;
+            } else {
+                let ext = path.extname(pathname).replace('.', '');
 
-            if (fs.statSync(pathname).isDirectory()) pathname += '/index.html';
-
-            fs.readFile(pathname, (error, data) => {
-                if(error){
-                    logger.error('Not found: ' + pathname);
-                    response.statusCode = 404;
-                    response.end('Not found.');
+                if ('string' === typeof this._mimeTypes[ext]) {
+                    response.setHeader('Content-type', this._mimeTypes[ext] || 'text/plain');
+                    response.end(data);
                 } else {
-                    const ext = path.extname(pathname).replace('.', '');
-
-                    if('string' === typeof this._mimeTypes[ext]) {
-                        response.setHeader('Content-type', this._mimeTypes[ext] || 'text/plain' );
-                        response.end(data);
-                    } else {
-                        response.statusCode = 500;
-                        response.end('Error getting the file. mime type not supported.');
-                    }
+                    response.statusCode = 500;
+                    response.end('Error getting the file. mime type not supported.');
                 }
-            });
+            }
         });
 
+        return true;
     }
-
 }
 
 module.exports = new Server();
