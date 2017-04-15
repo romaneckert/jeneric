@@ -4,6 +4,7 @@ const config = require('jeneric/core/config');
 const fs = require('fs-extra');
 const logger = require('jeneric/module/logger');
 const path = require('path');
+const io = require('socket.io');
 
 class Server {
 
@@ -28,9 +29,15 @@ class Server {
         this._server = http.createServer(this._handleRequest.bind(this));
 
         this._server.listen(3000);
+        this._io = io(this._server);
+        this._io.on('connection', this._handleNewConnection.bind(this));
 
         logger.debug('start http server');
 
+    }
+
+    _handleNewConnection(socket) {
+        console.log('new connection');
     }
 
     _handleRequest(request, response) {
