@@ -8,7 +8,9 @@ const io = require('socket.io');
 
 class Server {
 
-    constructor() {
+    constructor(callback) {
+
+        this._callback = callback;
 
         this._config = config.merge({
             path : 'public'
@@ -30,14 +32,10 @@ class Server {
 
         this._server.listen(3000);
         this._io = io(this._server);
-        this._io.on('connection', this._handleNewConnection.bind(this));
+        this._io.on('connection', this._callback);
 
         logger.debug('start http server');
 
-    }
-
-    _handleNewConnection(socket) {
-        console.log('new connection');
     }
 
     _handleRequest(request, response) {
@@ -48,7 +46,7 @@ class Server {
         let pathname = './' + this._config.path + parsedUrl.pathname;
 
         if(!fs.existsSync(pathname)) {
-            logger.error('Not found: ' + pathname);
+            logger.debug('Not found: ' + pathname);
             response.statusCode = 404;
             response.end('Not found.');
             return false;
@@ -57,7 +55,7 @@ class Server {
         if(fs.statSync(pathname).isDirectory()) pathname += '/index.html';
 
         if(!fs.existsSync(pathname)) {
-            logger.error('Not found: ' + pathname);
+            logger.debug('Not found: ' + pathname);
             response.statusCode = 404;
             response.end('Not found.');
             return false;
@@ -65,7 +63,7 @@ class Server {
 
         fs.readFile(pathname, (error, data) => {
             if (error) {
-                logger.error('Not found: ' + pathname);
+                logger.debug('Not found: ' + pathname);
                 response.statusCode = 404;
                 response.end('Not found.');
                 return false;
@@ -86,4 +84,4 @@ class Server {
     }
 }
 
-module.exports = new Server();
+module.exports = Server;

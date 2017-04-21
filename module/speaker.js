@@ -1,6 +1,7 @@
 const player = require('play-sound')(opts = {});
 const marytts = require('jeneric/module/marytts');
 const logger = require('jeneric/module/logger');
+const Exception = require('jeneric/core/exception');
 
 class Speaker {
 
@@ -34,8 +35,7 @@ class Speaker {
 
         player.play(entry.filePath, (error) => {
             if (error) {
-                logger.error(error);
-                throw error;
+                throw new Exception(error);
             } else {
                 logger.debug(entry.message);
                 this._speaking = false;
