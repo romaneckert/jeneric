@@ -2,13 +2,13 @@ const spawn = require('child_process').spawn;
 const querystring = require('querystring');
 const http = require('http');
 const config = require('jeneric/core/config');
-const logger = require('jeneric/module/logger');
 const slug = require('slug');
 const fs = require('fs-extra');
+const Service = require('../core/service');
 
 class MaryTTS {
 
-    constructor() {
+    constructor(directory, host, port, bin) {
 
         this._config = config.merge({
             directory : 'var/sounds',

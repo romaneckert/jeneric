@@ -5,8 +5,9 @@ const fs = require('fs-extra');
 const logger = require('jeneric/module/logger');
 const path = require('path');
 const io = require('socket.io');
+const Service = require('../core/service');
 
-class Server {
+class Server extends Service {
 
     constructor(callback) {
 

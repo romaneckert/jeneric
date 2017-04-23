@@ -1,10 +1,10 @@
-const logger = require('jeneric/module/logger');
+const Abstract = require('./abstract');
 
-class Exception {
+class Exception extends Abstract {
     constructor(error) {
 
         error = String(error);
-        logger.error(error);
+        this.logger.error(error);
         throw new Error(error)
 
     }
