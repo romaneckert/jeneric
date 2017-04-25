@@ -2,7 +2,7 @@ const fs = require('fs');
 const strftime = require('strftime');
 const Service = require('../core/service');
 
-class Logger {
+class Logger extends Service {
 
     constructor(directory) {
 

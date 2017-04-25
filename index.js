@@ -1,11 +1,11 @@
 const fs = require('fs');
 const path = require('path');
 
-const Logger = require('../service/logger');
-const Speaker = require('../service/speaker');
-const MaryTTS = require('../service/marytts');
+const Logger = require('./service/logger');
+const Speaker = require('./service/speaker');
+const MaryTTS = require('./service/marytts');
 
-class Kernel {
+class Jeneric {
 
     constructor() {
 
@@ -49,4 +49,4 @@ class Kernel {
 
 }
 
-module.exports = Kernel;
+module.exports = new Jeneric();
