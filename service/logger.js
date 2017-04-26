@@ -6,6 +6,8 @@ class Logger extends Service {
 
     constructor(directory) {
 
+        super();
+
         this._directory = directory;
 
         if(!fs.existsSync(this._directory)) fs.mkdirSync(this._directory);
@@ -37,10 +39,19 @@ class Logger extends Service {
                 data = data.split("\n");
                 break;
             case 'object':
-                data = String(data);
+                data = [JSON.stringify(data)];
                 break;
             default:
-                throw new Error('logger not defined for type "' + typeof data + '" and message "' + String(data) + '"');
+                data = [String(data)];
+                break;
+        }
+
+        switch(typeof meta) {
+            case 'object':
+                meta = JSON.stringify(meta);
+                break;
+            default:
+                meta = String(meta);
                 break;
         }
 
@@ -50,7 +61,7 @@ class Logger extends Service {
                 let message = '[' + strftime('%F %T', date) + ']';
                 message += ' [' + type + ']';
                 message += ' ' + line;
-                if(meta) message += ' [' + String(meta) + ']';
+                if(meta) message += ' [' + meta + ']';
                 message += ' [' + new Error().stack.split("at ")[3].match(/\w+\.js:\d+:\d+/g)[0] + ']';
                 message += '\n';
 

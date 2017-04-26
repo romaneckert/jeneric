@@ -2,20 +2,22 @@ const fs = require('fs');
 const path = require('path');
 
 const Logger = require('../service/logger');
-const Speaker = require('../service/speaker');
-const MaryTTS = require('../service/marytts');
+//const Speaker = require('../service/speaker');
+//const MaryTTS = require('../service/marytts');
 
 class Kernel {
 
     constructor() {
 
+        let rootPath = path.dirname(require.main.filename);
+
         this._config = {
             path : {
-                root : path.dirname(require.main.filename) + '/',
-                app : path.dirname(require.main.filename) + '/app/',
-                public : path.dirname(require.main.filename) + '/public/',
-                config : path.dirname(require.main.filename) + '/app/config/config.json',
-                logs : path.dirname(require.main.filename) + '/var/logs/',
+                root : rootPath + '/',
+                app : rootPath + '/app/',
+                public : rootPath + '/public/',
+                config : rootPath + '/app/config/config.json',
+                logs : rootPath + '/var/logs/',
             }
         };
 
@@ -27,7 +29,8 @@ class Kernel {
             }
         }
 
-        this._logger = new Logger(this._config.path.logs);
+        this._services = {};
+        this._services.logger = new Logger(this._config.path.logs);
 
     }
 
@@ -35,18 +38,10 @@ class Kernel {
         return this._config;
     }
 
-    get logger() {
-        return this._logger;
-    }
-
-    get speaker() {
-        return this._speaker;
-    }
-
-    get marytts() {
-        return this._marytts;
+    get services() {
+        return this._services;
     }
 
 }
 
-module.exports = Kernel;
+module.exports = new Kernel();

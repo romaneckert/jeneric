@@ -1,5 +1,3 @@
-//const Kernel = require('./kernel');
-
 class Abstract {
 
     constructor() {
@@ -8,13 +6,13 @@ class Abstract {
 
     get kernel() {
         if(null === this._kernel) {
-            //this._kernel = new Kernel();
+            this._kernel = require('./kernel');
         }
         return this._kernel;
     }
 
-    get logger() {
-        return this._kernel.logger;
+    get services() {
+        return this.kernel.services;
     }
 
 }

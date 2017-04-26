@@ -1,8 +1,6 @@
 const http = require("http");
 const url = require('url');
-const config = require('jeneric/core/config');
 const fs = require('fs-extra');
-const logger = require('jeneric/module/logger');
 const path = require('path');
 const io = require('socket.io');
 const Service = require('../core/service');
@@ -10,6 +8,8 @@ const Service = require('../core/service');
 class Server extends Service {
 
     constructor(callback) {
+
+        super();
 
         this._callback = callback;
 
