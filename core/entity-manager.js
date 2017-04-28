@@ -1,5 +1,6 @@
 const fs = require('fs');
 
+/** class to save instances of type entity */
 class EntityManager {
     constructor() {
         this._data = {};

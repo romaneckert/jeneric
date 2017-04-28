@@ -5,6 +5,7 @@ const path = require('path');
 const io = require('socket.io');
 const Service = require('../core/service');
 
+/** server service */
 class Server extends Service {
 
     constructor(callback) {

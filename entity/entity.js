@@ -1,3 +1,4 @@
+/** all entities have to extend the entity class */
 class Entity {
     constructor() {
         this._id = null;

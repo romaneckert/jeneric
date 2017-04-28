@@ -1,6 +1,10 @@
+/**
+ * @module services/speaker
+ */
 const player = require('play-sound')(opts = {});
 const Service = require('../core/service');
 
+/** speaker service */
 class Speaker {
 
     constructor() {

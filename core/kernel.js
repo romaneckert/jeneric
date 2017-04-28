@@ -1,10 +1,12 @@
 const fs = require('fs');
 const path = require('path');
+const Emitter = require('events');
 
 const Logger = require('../service/logger');
 //const Speaker = require('../service/speaker');
 //const MaryTTS = require('../service/marytts');
 
+/** kernel class generates all instances */
 class Kernel {
 
     constructor() {
@@ -31,6 +33,7 @@ class Kernel {
 
         this._services = {};
         this._services.logger = new Logger(this._config.path.logs);
+        this._pipe = new Emitter;
 
     }
 
@@ -40,6 +43,10 @@ class Kernel {
 
     get services() {
         return this._services;
+    }
+
+    get pipe() {
+        return this._pipe;
     }
 
 }

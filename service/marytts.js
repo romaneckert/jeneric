@@ -1,3 +1,6 @@
+/**
+ * @module services/marytts
+ */
 const spawn = require('child_process').spawn;
 const querystring = require('querystring');
 const http = require('http');
@@ -5,6 +8,7 @@ const slug = require('slug');
 const fs = require('fs-extra');
 const Service = require('../core/service');
 
+/** marytts service */
 class MaryTTS extends Service {
 
     constructor(directory, host, port, bin) {
