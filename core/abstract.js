@@ -20,17 +20,12 @@ class Abstract {
     }
 
     /**
-     * all registered services
+     * all registered components
      *
      * @protected
-     * @returns {Service}
      */
-    get services() {
-        return this.kernel.services;
-    }
-
-    get pipe() {
-        return this.kernel.pipe;
+    get components() {
+        return this.kernel.components;
     }
 
 }

@@ -3,10 +3,10 @@ const url = require('url');
 const fs = require('fs-extra');
 const path = require('path');
 const io = require('socket.io');
-const Service = require('../core/service');
+const AbstractModule = require('../core/abstract-module');
 
-/** server service */
-class Server extends Service {
+/** server module */
+class Server extends AbstractModule {
 
     constructor(callback) {
 

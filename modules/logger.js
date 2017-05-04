@@ -1,9 +1,9 @@
 const fs = require('fs');
 const strftime = require('strftime');
-const Service = require('../core/service');
+const AbstractModule = require('../core/abstract-module');
 
-/** logger service */
-class Logger extends Service {
+/** logger module */
+class Logger extends AbstractModule {
 
     constructor(directory) {
 

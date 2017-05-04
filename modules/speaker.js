@@ -2,12 +2,13 @@
  * @module services/speaker
  */
 const player = require('play-sound')(opts = {});
-const Service = require('../core/service');
+const AbstractModule = require('../core/abstract-module');
 
-/** speaker service */
-class Speaker {
+/** speaker module */
+class Speaker extends AbstractModule {
 
     constructor() {
+        super();
 
         this._speaking = false;
         this._queue = [];

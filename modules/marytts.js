@@ -6,10 +6,10 @@ const querystring = require('querystring');
 const http = require('http');
 const slug = require('slug');
 const fs = require('fs-extra');
-const Service = require('../core/service');
+const AbstractModule = require('../core/abstract-module');
 
-/** marytts service */
-class MaryTTS extends Service {
+/** marytts module */
+class MaryTTS extends AbstractModule {
 
     constructor(directory, host, port, bin) {
 
