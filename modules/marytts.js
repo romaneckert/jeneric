@@ -5,7 +5,7 @@ const spawn = require('child_process').spawn;
 const querystring = require('querystring');
 const http = require('http');
 const slug = require('slug');
-const fs = require('fs-extra');
+const fs = require('fs');
 const AbstractModule = require('../core/abstract-module');
 
 /** marytts module */
@@ -15,14 +15,10 @@ class MaryTTS extends AbstractModule {
 
         super();
 
-        this._config = config.merge({
-            directory : 'var/sounds',
-            host: '127.0.0.1',
-            port: 59125,
-            bin: 'vendor/marytts-5.2/bin/marytts-server'
-        });
-
-        fs.ensureDirSync(this._config.directory);
+        this._directory = directory;
+        this._host = host;
+        this._port = port;
+        this._bin = bin;
 
         this._running = false;
         this._starting = false;
@@ -124,4 +120,4 @@ class MaryTTS extends AbstractModule {
     }
 }
 
-module.exports = new MaryTTS();
+module.exports = MaryTTS;

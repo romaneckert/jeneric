@@ -49,4 +49,4 @@ class Speaker extends AbstractModule {
 
 }
 
-module.exports = new Speaker();
+module.exports = Speaker;

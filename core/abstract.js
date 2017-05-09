@@ -24,8 +24,8 @@ class Abstract {
      *
      * @protected
      */
-    get components() {
-        return this.kernel.components;
+    get modules() {
+        return this.kernel.modules;
     }
 
 }

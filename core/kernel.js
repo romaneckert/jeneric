@@ -1,47 +1,54 @@
 const fs = require('fs');
 const path = require('path');
-const Emitter = require('events');
+const merge = require('merge');
 
-const Logger = require('../modules/logger');
-//const Speaker = require('../service/speaker');
-//const MaryTTS = require('../service/marytts');
-
-/** kernel class generates all instances */
+/** kernel class generates all module instances */
 class Kernel {
 
     constructor() {
 
-        let rootPath = path.dirname(require.main.filename);
+        // get rootpath of application
+        let rootPath = path.dirname(require.main.filename) + '/';
 
-        // set default config
-        this._config = {
-            path : {
-                root : rootPath + '/',
-                app : rootPath + '/app/',
-                public : rootPath + '/public/',
-                config : rootPath + '/app/config/config.json',
-                logs : rootPath + '/var/logs/',
-            }
+        // get default config
+        this._defaultConfig = require('../config/config.json');
+
+        // get application config
+        this._appConfig = require(rootPath + 'app/config/config.json');
+
+        // merge default config with app config
+        this._config = merge.recursive(this._defaultConfig, this._appConfig);
+
+        // add path informations to config
+        this._config.path = {
+            root : rootPath,
+            app : rootPath + 'app/',
         };
 
-        // override some config settings from config file
-        if(fs.existsSync(this._config.path.config)) {
-            let jsonConfig = JSON.parse(fs.readFileSync(this._config.path.config, 'utf8'));
-
-            for(let entry in jsonConfig) {
-                this._config[entry] = jsonConfig[entry];
-            }
-        }
-
+        // create app modules
         this._modules = {};
 
-        // create core modules
-        this.logger = new Logger(this._config.path.logs);
-
-        // create app modules
         for(let module in this._config.modules) {
-            let moduleClass = require(this._config.path.app + 'component/' + this._config.components[component].path);
-            this._modules[modules] = new moduleClass();
+
+            let pathToModule = this._config.path.app + 'modules/' + module;
+
+            // check if module is an app module, if not module is an core module
+            if(!fs.existsSync(pathToModule + '.js')) {
+                pathToModule = __dirname + '/../modules/' + module
+            }
+
+            // check if module exists
+            if(!fs.existsSync(pathToModule + '.js')) console.error('module does not exists: ' + pathToModule + '.js');
+
+            // get args for generate module instances
+            let args = [];
+
+            for(let moduleArgument in this._config.modules[module]) args.push(this._config.modules[module][moduleArgument]);
+
+            // create instance of module
+            let moduleClass = require(pathToModule);
+            this._modules[module] = eval("new moduleClass('" + args.join("','") + "')");
+
         }
 
     }
@@ -51,7 +58,7 @@ class Kernel {
     }
 
     get modules() {
-        return this._components;
+        return this._modules;
     }
 
 }
