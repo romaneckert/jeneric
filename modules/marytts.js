@@ -22,6 +22,8 @@ class MaryTTS extends AbstractModule {
 
         this._running = false;
         this._starting = false;
+
+        if(!fs.existsSync(this._directory)) fs.mkdirSync(this._directory);
     }
 
     get running() {
@@ -33,23 +35,23 @@ class MaryTTS extends AbstractModule {
     }
 
     _startServer() {
-        logger.info('Start MaryTTS Server');
+        this.modules.logger.info('Start MaryTTS Server');
 
-        let child = spawn('./' + this._config.bin, {
+        let child = spawn('./' + this._bin, {
             detached: true
         });
 
         child.stdout.on('data', (data) => {
-            logger.debug(data.toString());
+            this.modules.logger.debug(data.toString());
         });
 
         child.stderr.on('data', (data) => {
             if(data.toString().includes('started in') && data.toString().includes('on port')) this._running = true;
-            logger.debug(data.toString());
+            this.modules.logger.debug(data.toString());
         });
 
         child.on('close', (code) => {
-            logger.debug('child process exited with code: ' + code);
+            this.modules.logger.debug('child process exited with code: ' + code);
         });
 
         child.unref();
@@ -67,8 +69,8 @@ class MaryTTS extends AbstractModule {
         };
 
         let queryString = querystring.stringify(params);
-        let url = 'http://' + this._config.host + ':' + this._config.port + '/process?' + queryString;
-        let filePath = this._config.directory + '/' + slug(message, {lower: true}) + '.wav';
+        let url = 'http://' + this._host + ':' + this._port + '/process?' + queryString;
+        let filePath = this._directory + slug(message, {lower: true}) + '.wav';
         let errorMessage = 'can not get message from marytts server for url: ' + url;
 
         http.get(url, (response) => {
@@ -86,12 +88,12 @@ class MaryTTS extends AbstractModule {
                 response.pipe(file);
 
             } else {
-                logger.error(errorMessage);
+                this.modules.logger.error(errorMessage);
                 throw errorMessage;
             }
 
         }).on('error', (errorMessage) => {
-            logger.error(errorMessage);
+            this.modules.logger.error(errorMessage);
             throw errorMessage;
         });
 
@@ -104,9 +106,9 @@ class MaryTTS extends AbstractModule {
         this._starting = true;
         this._running = false;
 
-        http.get('http://' + this._config.host + ':' + this._config.port + '/version', (response) => {
+        http.get('http://' + this._host + ':' + this._port + '/version', (response) => {
 
-            if(response && 200 == response.statusCode) {
+            if(response && 200 === response.statusCode) {
                 this._running = true;
                 this._starting = false;
             } else {

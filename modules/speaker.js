@@ -17,7 +17,7 @@ class Speaker extends AbstractModule {
 
     say(message) {
 
-        marytts.textToSpeech(message, (message, filePath) => {
+        this.modules.marytts.textToSpeech(message, (message, filePath) => {
 
             this._queue.push({
                 message: message,
@@ -30,7 +30,7 @@ class Speaker extends AbstractModule {
     }
 
     _speak() {
-        if(this._speaking || 0 == this._queue.length) return false;
+        if(this._speaking || 0 === this._queue.length) return false;
 
         this._speaking = true;
 
@@ -40,7 +40,7 @@ class Speaker extends AbstractModule {
             if (error) {
                 new Exception(error);
             } else {
-                this.logger.debug(entry.message);
+                this.modules.logger.debug(entry.message);
                 this._speaking = false;
                 this._speak();
             }

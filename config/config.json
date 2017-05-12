@@ -14,6 +14,9 @@
       "args": {
         "directory": "var/logs/"
       }
+    },
+    "speaker": {
+      "active": false
     }
   }
 }
