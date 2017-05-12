@@ -9,7 +9,6 @@ class Abstract {
 
     /**
      * the application kernel
-     * @protected
      * @returns {Kernel}
      */
     get kernel() {
@@ -21,8 +20,6 @@ class Abstract {
 
     /**
      * all registered components
-     *
-     * @protected
      */
     get modules() {
         return this.kernel.modules;

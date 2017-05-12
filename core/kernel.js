@@ -30,6 +30,10 @@ class Kernel {
 
         for(let module in this._config.modules) {
 
+            // check if module is active
+            let active = this._config.modules[module].active;
+            if(true !== active) continue;
+
             let pathToModule = this._config.path.app + 'modules/' + module;
 
             // check if module is an app module, if not module is an core module
@@ -41,9 +45,11 @@ class Kernel {
             if(!fs.existsSync(pathToModule + '.js')) console.error('module does not exists: ' + pathToModule + '.js');
 
             // get args for generate module instances
+            let moduleArguments = this._config.modules[module]['args'];
+
             let args = [];
 
-            for(let moduleArgument in this._config.modules[module]) args.push(this._config.modules[module][moduleArgument]);
+            for(let moduleArgument in moduleArguments) args.push(moduleArguments[moduleArgument]);
 
             // create instance of module
             let moduleClass = require(pathToModule);

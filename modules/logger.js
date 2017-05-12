@@ -51,6 +51,9 @@ class Logger extends AbstractModule {
             case 'object':
                 meta = JSON.stringify(meta);
                 break;
+            case 'undefined':
+                meta = null;
+                break;
             default:
                 meta = String(meta);
                 break;
@@ -62,7 +65,7 @@ class Logger extends AbstractModule {
                 let message = '[' + strftime('%F %T', date) + ']';
                 message += ' [' + type + ']';
                 message += ' ' + line;
-                if(meta) message += ' [' + meta + ']';
+                if(null !== meta) message += ' [' + meta + ']';
                 message += ' [' + new Error().stack.split("at ")[3].match(/\w+\.js:\d+:\d+/g)[0] + ']';
                 message += '\n';
 
