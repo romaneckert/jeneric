@@ -7,14 +7,14 @@ class Kernel {
 
     constructor() {
 
-        // get rootpath of application
-        let rootPath = path.dirname(require.main.filename) + '/';
+        // get root path of application
+        let rootPath = path.dirname(require.main.filename);
 
         // get default config
         this._defaultConfig = require('../config/config.json');
 
         // get application config
-        this._appConfig = require(rootPath + 'app/config/config.json');
+        this._appConfig = require(path.join(rootPath, 'app/config/config.json'));
 
         // merge default config with app config
         this._config = merge.recursive(this._defaultConfig, this._appConfig);
@@ -22,7 +22,7 @@ class Kernel {
         // add path informations to config
         this._config.path = {
             root : rootPath,
-            app : rootPath + 'app/',
+            app : path.join(rootPath, 'app'),
         };
 
         // create app modules
@@ -34,15 +34,15 @@ class Kernel {
             let active = this._config.modules[module].active;
             if(true !== active) continue;
 
-            let pathToModule = this._config.path.app + 'modules/' + module;
+            let pathToModule = path.join(this._config.path.app, 'modules', module + '.js');
 
             // check if module is an app module, if not module is an core module
-            if(!fs.existsSync(pathToModule + '.js')) {
-                pathToModule = __dirname + '/../modules/' + module
+            if(!fs.existsSync(pathToModule, '.js')) {
+                pathToModule = path.join(__dirname, '/../modules/', module + '.js');
             }
 
             // check if module exists
-            if(!fs.existsSync(pathToModule + '.js')) console.error('module does not exists: ' + pathToModule + '.js');
+            if(!fs.existsSync(pathToModule)) console.error('module does not exists: ' + pathToModule);
 
             // get args for generate module instances
             let moduleArguments = this._config.modules[module]['args'];
