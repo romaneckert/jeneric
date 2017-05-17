@@ -25,6 +25,10 @@ class Abstract {
         return this.kernel.modules;
     }
 
+    get config() {
+        return this.kernel.config;
+    }
+
 }
 
 module.exports = Abstract;

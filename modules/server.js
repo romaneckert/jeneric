@@ -1,6 +1,6 @@
-const http = require("http");
+const http = require('http');
 const url = require('url');
-const fs = require('fs-extra');
+const fs = require('fs');
 const path = require('path');
 const io = require('socket.io');
 const AbstractModule = require('../core/abstract-module');
@@ -8,15 +8,11 @@ const AbstractModule = require('../core/abstract-module');
 /** server module */
 class Server extends AbstractModule {
 
-    constructor(callback) {
+    constructor(directory) {
 
         super();
 
-        this._callback = callback;
-
-        this._config = config.merge({
-            path : 'public'
-        });
+        this._directory = directory;
 
         this._mimeTypes = {
             css:    'text/css',
@@ -31,24 +27,26 @@ class Server extends AbstractModule {
         };
 
         this._server = http.createServer(this._handleRequest.bind(this));
-
         this._server.listen(3000);
+
         this._io = io(this._server);
-        this._io.on('connection', this._callback);
+    }
 
-        logger.debug('start http server');
-
+    setConnectionCallback(callback) {
+        this._io.on('connection', callback);
     }
 
     _handleRequest(request, response) {
 
-        logger.debug(request.method + ': ' + request.url);
+        this.modules.logger.debug(request.method + ': ' + request.url);
 
         let parsedUrl = url.parse(request.url);
-        let pathname = './' + this._config.path + parsedUrl.pathname;
+        let pathname = path.join(this.config.path.root, this._directory, parsedUrl.pathname);
+
+        console.error(pathname);
 
         if(!fs.existsSync(pathname)) {
-            logger.debug('Not found: ' + pathname);
+            this.modules.logger.debug('Not found: ' + pathname);
             response.statusCode = 404;
             response.end('Not found.');
             return false;
@@ -57,7 +55,7 @@ class Server extends AbstractModule {
         if(fs.statSync(pathname).isDirectory()) pathname += '/index.html';
 
         if(!fs.existsSync(pathname)) {
-            logger.debug('Not found: ' + pathname);
+            this.modules.logger.debug('Not found: ' + pathname);
             response.statusCode = 404;
             response.end('Not found.');
             return false;
@@ -65,7 +63,7 @@ class Server extends AbstractModule {
 
         fs.readFile(pathname, (error, data) => {
             if (error) {
-                logger.debug('Not found: ' + pathname);
+                this.modules.logger.debug('Not found: ' + pathname);
                 response.statusCode = 404;
                 response.end('Not found.');
                 return false;

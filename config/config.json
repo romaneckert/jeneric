@@ -17,6 +17,12 @@
     },
     "speaker": {
       "active": false
+    },
+    "server": {
+      "active": false,
+      "args": {
+        "directory": "public/"
+      }
     }
   }
 }
