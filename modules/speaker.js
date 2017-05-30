@@ -40,7 +40,7 @@ class Speaker extends AbstractModule {
             if (error) {
                 new Exception(error);
             } else {
-                this.modules.logger.debug(entry.message);
+                this.modules.logger.debug('Speaker say: ' + entry.message);
                 this._speaking = false;
                 this._speak();
             }

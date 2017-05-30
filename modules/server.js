@@ -32,8 +32,8 @@ class Server extends AbstractModule {
         this._io = io(this._server);
     }
 
-    setConnectionCallback(callback) {
-        this._io.on('connection', callback);
+    on(event, callback) {
+        this._io.on(event, callback);
     }
 
     _handleRequest(request, response) {
@@ -42,8 +42,6 @@ class Server extends AbstractModule {
 
         let parsedUrl = url.parse(request.url);
         let pathname = path.join(this.config.path.root, this._directory, parsedUrl.pathname);
-
-        console.error(pathname);
 
         if(!fs.existsSync(pathname)) {
             this.modules.logger.debug('Not found: ' + pathname);

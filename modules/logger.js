@@ -5,11 +5,12 @@ const AbstractModule = require('../core/abstract-module');
 /** logger module */
 class Logger extends AbstractModule {
 
-    constructor(directory) {
+    constructor(directory, consoleLevels) {
 
         super();
 
         this._directory = directory;
+        this._consoleLevels = consoleLevels;
 
         if(!fs.existsSync(this._directory)) fs.mkdirSync(this._directory);
 
@@ -67,44 +68,49 @@ class Logger extends AbstractModule {
                 message += ' ' + line;
                 if(null !== meta) message += ' [' + meta + ']';
                 message += ' [' + new Error().stack.split("at ")[3].match(/\w+\.js:\d+:\d+/g)[0] + ']';
-                message += '\n';
 
                 switch(type) {
                     case 'debug':
-                        fs.appendFile(
+
+                        if(-1 !== this._consoleLevels.indexOf(type)) console.log(message);
+
+                        fs.appendFileSync(
                             this._directory + 'debug.log',
-                            message,
-                            (error) => { if (error) throw error; }
+                            message + '\n'
                         );
                         break;
                     case 'info':
-                        fs.appendFile(
+
+                        if(-1 !== this._consoleLevels.indexOf(type)) console.info(message);
+
+                        fs.appendFileSync(
                             this._directory + 'debug.log',
-                            message,
-                            (error) => { if (error) throw error; }
+                            message + '\n'
                         );
 
-                        fs.appendFile(
+                        fs.appendFileSync(
                             this._directory + 'info.log',
-                            message,
-                            (error) => { if (error) throw error; }
+                            message + '\n'
                         );
 
                         break;
                     case 'error':
+
+                        if(-1 !== this._consoleLevels.indexOf(type)) console.error(message);
+
                         fs.appendFileSync(
                             this._directory + 'debug.log',
-                            message
+                            message + '\n'
                         );
 
                         fs.appendFileSync(
                             this._directory + 'info.log',
-                            message
+                            message + '\n'
                         );
 
                         fs.appendFileSync(
                             this._directory + 'error.log',
-                            message
+                            message + '\n'
                         );
                         break;
                 }

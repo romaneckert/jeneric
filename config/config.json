@@ -12,7 +12,12 @@
     "logger": {
       "active": true,
       "args": {
-        "directory": "var/logs/"
+        "directory": "var/logs/",
+        "consoleLevels": [
+          "debug",
+          "info",
+          "error"
+        ]
       }
     },
     "speaker": {

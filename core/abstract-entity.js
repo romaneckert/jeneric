@@ -1,5 +1,5 @@
 /** all entities have to extend the entity class */
-class Entity {
+class AbstractEntity {
     constructor() {
         this._id = null;
     }
@@ -12,9 +12,9 @@ class Entity {
         this._id = id;
     }
 
-    _getTableName() {
+    get tableName() {
         return this.constructor.name.toLowerCase() + 's';
     }
 }
 
-module.exports = Entity;
+module.exports = AbstractEntity;
