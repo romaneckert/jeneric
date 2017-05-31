@@ -10,7 +10,7 @@ class Speaker extends AbstractModule {
     constructor() {
         super();
 
-        this._speaking = false;
+        this._isSpeaking = false;
         this._queue = [];
 
     }
@@ -30,9 +30,9 @@ class Speaker extends AbstractModule {
     }
 
     _speak() {
-        if(this._speaking || 0 === this._queue.length) return false;
+        if(this._isSpeaking || 0 === this._queue.length) return false;
 
-        this._speaking = true;
+        this._isSpeaking = true;
 
         let entry = this._queue.shift();
 
@@ -40,11 +40,15 @@ class Speaker extends AbstractModule {
             if (error) {
                 new Exception(error);
             } else {
-                this.modules.logger.debug('Speaker say: ' + entry.message);
-                this._speaking = false;
+                this.modules.logger.debug(entry.message);
+                this._isSpeaking = false;
                 this._speak();
             }
         });
+    }
+
+    get isSpeaking() {
+        return this._isSpeaking;
     }
 
 }

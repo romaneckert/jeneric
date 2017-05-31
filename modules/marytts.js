@@ -58,6 +58,13 @@ class MaryTTS extends AbstractModule {
     }
 
     textToSpeech(message, callback) {
+
+        let filePath = this._directory + slug(message, {lower: true}) + '.wav';
+        if(fs.existsSync(filePath)) {
+            callback(message, filePath);
+            return true;
+        }
+
         let params = {
             'INPUT_TEXT' : message,
             'INPUT_TYPE': 'TEXT',
@@ -70,7 +77,7 @@ class MaryTTS extends AbstractModule {
 
         let queryString = querystring.stringify(params);
         let url = 'http://' + this._host + ':' + this._port + '/process?' + queryString;
-        let filePath = this._directory + slug(message, {lower: true}) + '.wav';
+
         let errorMessage = 'can not get message from marytts server for url: ' + url;
 
         http.get(url, (response) => {
@@ -80,6 +87,9 @@ class MaryTTS extends AbstractModule {
                 let file = fs.createWriteStream(filePath);
 
                 file.on('finish', () => {
+
+                    this.modules.logger.debug('generate file ' + filePath);
+
                     file.close(() => {
                         callback(message, filePath);
                     });
@@ -96,6 +106,8 @@ class MaryTTS extends AbstractModule {
             this.modules.logger.error(errorMessage);
             throw errorMessage;
         });
+
+        return true;
 
     }
 

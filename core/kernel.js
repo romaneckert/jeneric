@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const merge = require('merge');
+const Utils = require('./utils');
 
 /** kernel class generates all module instances */
 class Kernel {
@@ -53,7 +54,7 @@ class Kernel {
 
             // create instance of module
             let moduleClass = require(pathToModule);
-            this._modules[module] = eval("new moduleClass('" + args.join("','") + "')");
+            this._modules[Utils.snakeCaseToCamelCase(module)] = eval("new moduleClass('" + args.join("','") + "')");
 
         }
 

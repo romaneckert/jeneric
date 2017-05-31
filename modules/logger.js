@@ -1,6 +1,7 @@
 const fs = require('fs');
 const strftime = require('strftime');
 const AbstractModule = require('../core/abstract-module');
+const Log = require('../entity/log');
 
 /** logger module */
 class Logger extends AbstractModule {
@@ -34,8 +35,6 @@ class Logger extends AbstractModule {
 
     _log(data, meta, type) {
 
-        let date = new Date();
-
         switch(typeof data) {
             case 'string':
                 data = data.split("\n");
@@ -63,54 +62,53 @@ class Logger extends AbstractModule {
         for (let line of data) {
             if(line) {
 
-                let message = '[' + strftime('%F %T', date) + ']';
-                message += ' [' + type + ']';
-                message += ' ' + line;
-                if(null !== meta) message += ' [' + meta + ']';
-                message += ' [' + new Error().stack.split("at ")[3].match(/\w+\.js:\d+:\d+/g)[0] + ']';
+                let log = new Log(line, type, new Error().stack, meta);
+
+                this.modules.entityManager.persist(log);
+                this.modules.entityManager.flush();
 
                 switch(type) {
                     case 'debug':
 
-                        if(-1 !== this._consoleLevels.indexOf(type)) console.log(message);
+                        if(-1 !== this._consoleLevels.indexOf(type)) console.log(log.longMessage);
 
                         fs.appendFileSync(
                             this._directory + 'debug.log',
-                            message + '\n'
+                            log.longMessage + '\n'
                         );
                         break;
                     case 'info':
 
-                        if(-1 !== this._consoleLevels.indexOf(type)) console.info(message);
+                        if(-1 !== this._consoleLevels.indexOf(type)) console.log(log.longMessage);
 
                         fs.appendFileSync(
                             this._directory + 'debug.log',
-                            message + '\n'
+                            log.longMessage + '\n'
                         );
 
                         fs.appendFileSync(
                             this._directory + 'info.log',
-                            message + '\n'
+                            log.longMessage + '\n'
                         );
 
                         break;
                     case 'error':
 
-                        if(-1 !== this._consoleLevels.indexOf(type)) console.error(message);
+                        if(-1 !== this._consoleLevels.indexOf(type)) console.log(log.longMessage);
 
                         fs.appendFileSync(
                             this._directory + 'debug.log',
-                            message + '\n'
+                            log.longMessage + '\n'
                         );
 
                         fs.appendFileSync(
                             this._directory + 'info.log',
-                            message + '\n'
+                            log.longMessage + '\n'
                         );
 
                         fs.appendFileSync(
                             this._directory + 'error.log',
-                            message + '\n'
+                            log.longMessage + '\n'
                         );
                         break;
                 }

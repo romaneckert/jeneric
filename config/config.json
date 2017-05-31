@@ -1,12 +1,9 @@
 {
   "modules": {
-    "marytts": {
-      "active": false,
+    "entity-manager": {
+      "active": true,
       "args": {
-        "directory": "var/sounds/",
-        "host": "127.0.0.1",
-        "port": 59125,
-        "bin": "vendor/marytts-5.2/bin/marytts-server"
+        "directory": "var/"
       }
     },
     "logger": {
@@ -20,14 +17,23 @@
         ]
       }
     },
-    "speaker": {
-      "active": false
+    "marytts": {
+      "active": false,
+      "args": {
+        "directory": "var/sounds/",
+        "host": "127.0.0.1",
+        "port": 59125,
+        "bin": "vendor/marytts-5.2/bin/marytts-server"
+      }
     },
     "server": {
       "active": false,
       "args": {
         "directory": "public/"
       }
+    },
+    "speaker": {
+      "active": false
     }
   }
 }
