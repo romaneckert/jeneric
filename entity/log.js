@@ -12,19 +12,18 @@ class Log extends AbstractEntity {
         this._type = type;
         this._callStack = callStack;
         this._meta = meta;
+    }
 
-        let script = this._callStack.split("at ")[3].match(/\w+\.js/g)[0];
-        let scriptWithLineNumber = this._callStack.split("at ")[3].match(/\w+\.js:\d+:\d+/g)[0];
+    get script() {
+        return this.callStack.split("at ")[3].match(/\w+\.js/g)[0];
+    }
 
-        this._module = script.replace('.js', '');
+    get scriptWithLineNumber() {
+        return this.callStack.split("at ")[3].match(/\w+\.js:\d+:\d+/g)[0];
+    }
 
-        this._longMessage = '[' + strftime('%F %T', this._date) + ']';
-        this._longMessage += ' [' + this._type + ']';
-        this._longMessage += ' [' + this._module + ']';
-        this._longMessage += ' ' + this._message;
-        if(null !== this._meta) this._longMessage += ' [' + this._meta + ']';
-        this._longMessage += ' [' + scriptWithLineNumber + ']';
-
+    get date() {
+        return this._date;
     }
 
     get message() {
@@ -35,7 +34,7 @@ class Log extends AbstractEntity {
         return this._type;
     }
 
-    get callstack() {
+    get callStack() {
         return this._callStack;
     }
 
@@ -44,11 +43,17 @@ class Log extends AbstractEntity {
     }
 
     get module() {
-        return this._module;
+        return this.script.replace('.js', '');
     }
 
     get longMessage() {
-        return this._longMessage;
+        let longMessage = '[' + strftime('%F %T', this.date) + ']';
+        longMessage += ' [' + this.type + ']';
+        longMessage += ' [' + this.module + ']';
+        longMessage += ' ' + this.message;
+        if(null !== this.meta) longMessage += ' [' + this.meta + ']';
+        longMessage += ' [' + this.scriptWithLineNumber + ']';
+        return longMessage;
     }
 
 }

@@ -12,8 +12,8 @@ class AbstractEntity {
         this._id = id;
     }
 
-    get tableName() {
-        return this.constructor.name.toLowerCase() + 's';
+    get entityName() {
+        return this.constructor.name.toLowerCase();
     }
 }
 

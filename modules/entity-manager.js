@@ -13,37 +13,49 @@ class EntityManager extends AbstractModule {
         this._directory = directory;
         this._path = this._directory + 'data.json';
 
-        if(!fs.existsSync(this._path)) {
-            fs.writeFileSync(this._path, JSON.stringify(this._data));
-        }
+        // create data json if not exists
+        if(!fs.existsSync(this._path)) fs.writeFileSync(this._path, JSON.stringify(this._data));
 
-        this._data = JSON.parse(fs.readFileSync(this._path));
+        // read data from json
+        let rawData = JSON.parse(fs.readFileSync(this._path), (key, value) => {
+            let a;
+            // convert date string to date object
+            if (typeof value === 'string') {
+                a = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*)?)Z$/.exec(value);
 
-        for(let tableName in this._data) {
-            let tableData = this._data[tableName];
+                if (a) {
+                    return new Date(Date.UTC(+a[1], +a[2] - 1, +a[3], +a[4], +a[5], +a[6]));
+                }
+            }
+            return value;
+        });
 
-            for(let id in tableData) {
-                let rawObject = this._data[tableName][id];
-                let entityClass = require(path.join(__dirname, '/../entity/' + tableName.slice(0, -1) + '.js'));
-                let object = eval("Object.create(entityClass, rawObject)");
+        // set entity class to each object
+        for(let entityName in rawData) {
 
-                console.log(object);
+            let entityData = rawData[entityName];
 
+            for(let id in entityData) {
+                let entityClass = require(path.join(__dirname, '/../entity/' + entityName + '.js'));
+
+                rawData[entityName][id].__proto__ = entityClass.prototype;
+
+                this.persist(rawData[entityName][id]);
             }
         }
     }
 
     persist(object) {
 
-        let tableName = object.tableName;
+        let entityName = object.entityName;
 
         // check if table name already used in data
-        if('undefined' === typeof this._data[tableName]) this._data[tableName] = {};
+        if('undefined' === typeof this._data[entityName]) this._data[entityName] = {};
 
         // set id for object if not set
         if('number' !== typeof object.id) object.id = this.getNewId(object);
 
-        this._data[tableName][object.id] = object;
+        this._data[entityName][object.id] = object;
 
     }
 
@@ -54,9 +66,7 @@ class EntityManager extends AbstractModule {
     // action to save current data
     flush() {
 
-        fs.writeFileSync(this._path, JSON.stringify(this._data), (error) => {
-            if (error) throw Error;
-        });
+        fs.writeFileSync(this._path, JSON.stringify(this._data));
 
     }
 
@@ -64,7 +74,7 @@ class EntityManager extends AbstractModule {
 
         let increment = 0;
 
-        for(let id in this._data[object.tableName]) {
+        for(let id in this._data[object.entityName]) {
             if(parseInt(id) > increment) increment = parseInt(id);
         }
 

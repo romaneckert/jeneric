@@ -79,7 +79,7 @@ class Logger extends AbstractModule {
                         break;
                     case 'info':
 
-                        if(-1 !== this._consoleLevels.indexOf(type)) console.log(log.longMessage);
+                        if(-1 !== this._consoleLevels.indexOf(type)) console.info(log.longMessage);
 
                         fs.appendFileSync(
                             this._directory + 'debug.log',
@@ -94,7 +94,7 @@ class Logger extends AbstractModule {
                         break;
                     case 'error':
 
-                        if(-1 !== this._consoleLevels.indexOf(type)) console.log(log.longMessage);
+                        if(-1 !== this._consoleLevels.indexOf(type)) console.error(log.longMessage);
 
                         fs.appendFileSync(
                             this._directory + 'debug.log',
