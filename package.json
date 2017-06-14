@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "i2c-bus": "^1.2.2",
-    "merge": "^1.2.0"
+    "merge": "^1.2.0",
+    "sleep": "^5.1.1"
   }
 }
