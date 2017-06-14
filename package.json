@@ -24,6 +24,7 @@
     "minami": "^1.2.3"
   },
   "dependencies": {
+    "i2c-bus": "^1.2.2",
     "merge": "^1.2.0"
   }
 }

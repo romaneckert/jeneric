@@ -12,10 +12,7 @@ class Abstract {
      * @returns {Kernel}
      */
     get kernel() {
-        if(null === this._kernel) {
-            this._kernel = require('./kernel');
-        }
-        return this._kernel;
+        return (null === this._kernel) ? require('./kernel') : this._kernel;
     }
 
     /**
