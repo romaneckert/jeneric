@@ -18,11 +18,6 @@
     "url": "https://github.com/romaneckert/jeneric/issues"
   },
   "homepage": "https://github.com/romaneckert/jeneric#readme",
-  "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-jsdoc3": "^1.0.1",
-    "minami": "^1.2.3"
-  },
   "dependencies": {
     "i2c-bus": "^1.2.2",
     "merge": "^1.2.0",
