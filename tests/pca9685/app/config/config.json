@@ -1,0 +1,7 @@
+{
+  "modules": {
+    "pca9685" : {
+      "active" : true
+    }
+  }
+}

@@ -34,6 +34,9 @@
     },
     "speaker": {
       "active": false
+    },
+    "pca9685": {
+      "active": true
     }
   }
 }

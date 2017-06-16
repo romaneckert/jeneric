@@ -15,11 +15,17 @@ class Kernel {
         this._defaultConfig = require('../config/config.json');
 
         // get application config
-        this._appConfig = require(path.join(rootPath, 'app/config/config.json'));
+        let pathToAppConfig = path.join(rootPath, 'app/config/config.json');
 
-        // merge default config with app config
-        this._config = merge.recursive(this._defaultConfig, this._appConfig);
+        if(fs.existsSync(pathToAppConfig)) {
+            this._appConfig = require(pathToAppConfig);
 
+            // merge default config with app config
+            this._config = merge.recursive(this._defaultConfig, this._appConfig);
+        } else {
+            this._config = this._defaultConfig;
+        }
+        
         // add path informations to config
         this._config.path = {
             root : rootPath,
