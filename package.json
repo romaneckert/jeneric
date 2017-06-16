@@ -1,6 +1,6 @@
 {
   "name": "jeneric",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "simple helper and abstract classes / framework for node js applications",
   "main": "index.js",
   "repository": {
