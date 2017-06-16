@@ -35,11 +35,11 @@ class PCA9685 extends AbstractModule {
         let oldmode = this._i2c.readByteSync(this._address, this._mode1, 1);
         let newmode = (oldmode & 0x7F) | 0x10;
 
-        this._i2c.writeByteSync(this.address, this._mode1, newmode);
-        this._i2c.writeByteSync(this.address, this._prescale, prescale);
-        this._i2c.writeByteSync(this.address, this._mode1, oldmode);
+        this._i2c.writeByteSync(this._address, this._mode1, newmode);
+        this._i2c.writeByteSync(this._address, this._prescale, prescale);
+        this._i2c.writeByteSync(this._address, this._mode1, oldmode);
         sleep.msleep(10);
-        this._i2c.writeByteSync(this.address, this._mode1, oldmode | 0x80);
+        this._i2c.writeByteSync(this._address, this._mode1, oldmode | 0x80);
 
     }
 
